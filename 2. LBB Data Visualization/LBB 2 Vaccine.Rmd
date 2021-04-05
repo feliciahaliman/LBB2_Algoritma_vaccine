@@ -1,0 +1,101 @@
+---
+title: "Vaccine in Indonesia"
+author: "Felicia Haliman"
+date: "4/3/2021"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Read Data `Vaccine`
+
+# Embed `library`
+```{r}
+library(glue)
+library(ggrepel)
+library(ggridges)
+library(ggthemes)
+library(leaflet)
+library(lubridate)
+library(scales)
+library(tidyverse)
+library(sf)
+library(rnaturalearth)
+library(padr)
+library(plotly)
+library(magick)
+```
+
+```{r}
+vaccine <- read.csv("data_input/country_vaccinations.csv")
+head(vaccine)
+```
+## Clean Data
+
+```{r}
+colSums(is.na(vaccine))
+```
+```{r}
+vaccine_clean <- vaccine %>% 
+  drop_na(total_vaccinations,people_vaccinated,people_fully_vaccinated,daily_vaccinations_raw,daily_vaccinations,total_vaccinations_per_hundred,people_fully_vaccinated_per_hundred,people_fully_vaccinated_per_hundred,daily_vaccinations_per_million)
+```
+
+```{r}
+colSums(is.na(vaccine_clean))
+```
+
+# Clean!
+
+# 1.Actually i just interest how many ppl vaccinated in Indonesia
+
+```{r}
+vaccine_indonesia <- vaccine_clean[vaccine_clean$country == "Indonesia", ]
+vaccine_indonesia
+```
+
+
+
+## Check the data `boxplot`
+
+```{r}
+boxplot(vaccine_indonesia$people_vaccinated)
+```
+
+# 2.normal
+
+## Start make the visualization
+
+```{r}
+aggregate(people_vaccinated ~ country, vaccine_indonesia, sum)
+```
+
+# 3.total `12348556` ppl vaccinated
+
+
+```{r}
+ggplot(vaccine_indonesia, aes(x = people_vaccinated,
+                        y = total_vaccinations,
+                        size = people_vaccinated,
+                        color = country)
+       ) +
+  geom_point() +
+  scale_color_manual(values = c("red", "blue", "green"))
+```
+
+# 4.`insight`: between total vaccine and ppl vaccinated balance
+
+`Conclusion:`
+1.Actually i just interested with how many ppl vaccinated in Indonesia\
+2.normal\
+3.total `12348556` vaccinated\
+4.`insight`: between total vaccine and ppl vaccinated balance
+
+
+```{r}
+# Based on data, 12348556 ppl vaccinated and government great to handle
+```
